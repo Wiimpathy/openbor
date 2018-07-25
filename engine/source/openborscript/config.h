@@ -403,6 +403,7 @@ enum systemvariant_enum
     _sv_lightz,
     _sv_maxanimations,
     _sv_maxattacktypes,
+    _sv_maxcollisions,
     _sv_maxentityvars,
     _sv_maxglobalvars,
     _sv_maxindexedvars,
