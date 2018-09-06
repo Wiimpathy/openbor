@@ -18,6 +18,7 @@
 #include "menu.h"
 #include <fat.h>
 
+extern void __exception_setreload(int t);
 
 char packfile[MAX_FILENAME_LEN];
 char paksDir[MAX_FILENAME_LEN];
@@ -59,12 +60,29 @@ int main(int argc, char * argv[])
 {
 	video_init();
 
-// use libfat for FAT filesystem access
-	fatInitDefault();
+	// Reset after 8 seconds after a crash
+	__exception_setreload(8);
+
+	// reload to IOS58 for USB2 support
+	if (IOS_GetVersion() != 58)
+	{       
+        IOS_ReloadIOS(58);
+	}
+
+	// use libfat for FAT filesystem access
+	int retry = 0;
+	int fatMounted = 0;
+
+	// try to mount FAT devices during 3 seconds
+	while (!fatMounted && (retry < 12))
+	{
+		fatMounted = fatInitDefault();
+		usleep(250000);
+		retry++;
+	}
 
 	setSystemRam();
 	packfile_mode(0);
-
 	
 //new system to get base directory on usb or sd.
 
