@@ -772,58 +772,64 @@ void Menu()
 	setVideoMode();
 	drawLogo();
 
-	dListTotal = findPaks();
-	dListCurrentPosition = 0;
-	if(dListTotal != 1)
+	// Skips menu if we already have a .pak to load
+	int quicklaunch = (packfile[0] == '\0') ? 0 : 1;
+
+	if(!quicklaunch)
 	{
-		sortList();
-		getAllLogs();
-		initMenu(1);
-		drawMenu();
-		pControl = ControlMenu;
-
-		while(!done)
+		dListTotal = findPaks();
+		dListCurrentPosition = 0;
+		if(dListTotal != 1)
 		{
-			ctrl = Control();
-			switch(ctrl)
+			sortList();
+			getAllLogs();
+			initMenu(1);
+			drawMenu();
+			pControl = ControlMenu;
+
+			while(!done)
 			{
-				case 1:
-					if (dListTotal > 0) done = 1;
-					break;
+				ctrl = Control();
+				switch(ctrl)
+				{
+					case 1:
+						if (dListTotal > 0) done = 1;
+						break;
 
-				case 2:
-					done = 1;
-					break;
+					case 2:
+						done = 1;
+						break;
 
-				case 3:
-					drawLogs();
-					break;
+					case 3:
+						drawLogs();
+						break;
 
-				case -1:
-					drawMenu();
-					break;
+					case -1:
+						drawMenu();
+						break;
 
-				case -2:
-					// BGM player isn't supported
-					break;
+					case -2:
+						// BGM player isn't supported
+						break;
 
-                default:
-					break;
+		            default:
+						break;
+				}
+			}
+			freeAllLogs();
+			termMenu();
+			if(ctrl == 2)
+			{
+				if (filelist)
+				{
+					free(filelist);
+					filelist = NULL;
+				}
+				borExit(0);
 			}
 		}
-		freeAllLogs();
-		termMenu();
-		if(ctrl == 2)
-		{
-			if (filelist)
-			{
-				free(filelist);
-				filelist = NULL;
-			}
-			borExit(0);
-		}
+		getBasePath(packfile, filelist[dListCurrentPosition+dListScrollPosition].filename, 1);
 	}
-	getBasePath(packfile, filelist[dListCurrentPosition+dListScrollPosition].filename, 1);
 	free(filelist);
 }
 

@@ -58,6 +58,10 @@ void initDirPath(char* dest, char* relPath)
 
 int main(int argc, char * argv[])
 {
+	// Launch a pak directly from a loader with plugin ability(Wiiflow, Postloader etc).
+	// With WiiFlow, the first definable plugin's argument in openbor.ini is argv[1].
+	int directlaunch = (argc > 1 && (argv[1][0] == 'u' || argv[1][0] == 's')) ? 1 : 0;
+
 	video_init();
 
 	// Reset after 8 seconds after a crash
@@ -84,23 +88,36 @@ int main(int argc, char * argv[])
 	setSystemRam();
 	packfile_mode(0);
 	
-//new system to get base directory on usb or sd.
-
+	//new system to get base directory on usb or sd.
 	char root[MAX_FILENAME_LEN];
 	memset(root, '\0', sizeof(root));
-	strncpy(root, argv[0], strrchr(argv[0], '/') - argv[0]);
-	
-		sprintf(rootDir, "%s/", root);
-		sprintf(savesDir, "%s/Saves", root);
-		sprintf(paksDir,"%s/Paks", root);
-		sprintf(logsDir, "%s/Logs", root);
-		sprintf(screenShotsDir, "%s/ScreenShots", root);
-		
 
+	// Root path sent by the loader's argument(apps/OpenBOR by default)
+	if(directlaunch)
+	{
+		strncpy(root, argv[1], strrchr(argv[1], '/') - argv[1]);
+	}
+	else
+	{
+		strncpy(root, argv[0], strrchr(argv[0], '/') - argv[0]);
+	}
+		
+	sprintf(rootDir, "%s/", root);
+	sprintf(savesDir, "%s/Saves", root);
+	sprintf(paksDir,"%s/Paks", root);
+	sprintf(logsDir, "%s/Logs", root);
+	sprintf(screenShotsDir, "%s/ScreenShots", root);
+		
 	dirExists(paksDir, 1);
 	dirExists(savesDir, 1);
 	dirExists(logsDir, 1);
 	dirExists(screenShotsDir, 1);
+
+	// Pack's name sent by the loader's argument
+	if(directlaunch)
+	{
+		getBasePath(packfile, argv[2], 1);
+	}
 
 	Menu();
 	openborMain(argc, argv);
