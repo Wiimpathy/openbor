@@ -220,34 +220,43 @@ void refreshInput()
 	if(gcbtns & PAD_BUTTON_RIGHT)                         btns |= DIR_RIGHT;
 
 	// Controller buttons
-	if(wpad->btns_h & WPAD_BUTTON_1)                      btns |= WIIMOTE_1;
-	if(wpad->btns_h & WPAD_BUTTON_2)                      btns |= WIIMOTE_2;
-	if(wpad->btns_h & WPAD_BUTTON_A)                      btns |= WIIMOTE_A;
-	if(wpad->btns_h & WPAD_BUTTON_B)                      btns |= WIIMOTE_B;
-	if(wpad->btns_h & WPAD_BUTTON_MINUS)                  btns |= WIIMOTE_MINUS;
-	if(wpad->btns_h & WPAD_BUTTON_PLUS)                   btns |= WIIMOTE_PLUS;
-	if(wpad->btns_h & WPAD_BUTTON_HOME)                   btns |= WIIMOTE_HOME;
-	if(wpad->btns_h & WPAD_NUNCHUK_BUTTON_Z)              btns |= NUNCHUK_Z;
-	if(wpad->btns_h & WPAD_NUNCHUK_BUTTON_C)              btns |= NUNCHUK_C;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_A)              btns |= CC_A;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_B)              btns |= CC_B;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_Y)              btns |= CC_Y;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_X)              btns |= CC_X;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_MINUS)          btns |= CC_MINUS;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_PLUS)           btns |= CC_PLUS;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_HOME)           btns |= CC_HOME;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_FULL_R)         btns |= CC_R;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_FULL_L)         btns |= CC_L;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_ZL)             btns |= CC_ZL;
-	if(wpad->btns_h & WPAD_CLASSIC_BUTTON_ZR)             btns |= CC_ZR;
-	if(gcbtns & PAD_BUTTON_X)                             btns |= GC_X;
-	if(gcbtns & PAD_BUTTON_Y)                             btns |= GC_Y;
-	if(gcbtns & PAD_BUTTON_A)                             btns |= GC_A;
-	if(gcbtns & PAD_BUTTON_B)                             btns |= GC_B;
-	if(gcbtns & PAD_TRIGGER_R)                            btns |= GC_R;
-	if(gcbtns & PAD_TRIGGER_L)                            btns |= GC_L;
-	if(gcbtns & PAD_TRIGGER_Z)                            btns |= GC_Z;
-	if(gcbtns & PAD_BUTTON_START)                         btns |= GC_START;
+	if(wpad->exp.type <= WPAD_EXP_NUNCHUK)
+	{
+		if(wpad->btns_h & WPAD_BUTTON_1)                      btns |= WIIMOTE_1;
+		if(wpad->btns_h & WPAD_BUTTON_2)                      btns |= WIIMOTE_2;
+		if(wpad->btns_h & WPAD_BUTTON_A)                      btns |= WIIMOTE_A;
+		if(wpad->btns_h & WPAD_BUTTON_B)                      btns |= WIIMOTE_B;
+		if(wpad->btns_h & WPAD_BUTTON_MINUS)                  btns |= WIIMOTE_MINUS;
+		if(wpad->btns_h & WPAD_BUTTON_PLUS)                   btns |= WIIMOTE_PLUS;
+		if(wpad->btns_h & WPAD_BUTTON_HOME)                   btns |= WIIMOTE_HOME;
+		if(wpad->btns_h & WPAD_NUNCHUK_BUTTON_Z)              btns |= NUNCHUK_Z;
+		if(wpad->btns_h & WPAD_NUNCHUK_BUTTON_C)              btns |= NUNCHUK_C;
+	}
+	else if(wpad->exp.type == WPAD_EXP_CLASSIC)
+	{
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_A)              btns |= CC_A;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_B)              btns |= CC_B;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_Y)              btns |= CC_Y;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_X)              btns |= CC_X;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_MINUS)          btns |= CC_MINUS;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_PLUS)           btns |= CC_PLUS;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_HOME)           btns |= CC_HOME;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_FULL_R)         btns |= CC_R;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_FULL_L)         btns |= CC_L;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_ZL)             btns |= CC_ZL;
+		if(wpad->btns_h & WPAD_CLASSIC_BUTTON_ZR)             btns |= CC_ZR;
+	}
+	else
+	{
+		if(gcbtns & PAD_BUTTON_X)                             btns |= GC_X;
+		if(gcbtns & PAD_BUTTON_Y)                             btns |= GC_Y;
+		if(gcbtns & PAD_BUTTON_A)                             btns |= GC_A;
+		if(gcbtns & PAD_BUTTON_B)                             btns |= GC_B;
+		if(gcbtns & PAD_TRIGGER_R)                            btns |= GC_R;
+		if(gcbtns & PAD_TRIGGER_L)                            btns |= GC_L;
+		if(gcbtns & PAD_TRIGGER_Z)                            btns |= GC_Z;
+		if(gcbtns & PAD_BUTTON_START)                         btns |= GC_START;
+	}
 
 	// update buttons pressed (not held)
 	buttonsPressed = btns & ~buttonsHeld;
